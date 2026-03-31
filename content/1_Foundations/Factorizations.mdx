@@ -64,39 +64,7 @@ $= 3(a+b)(b+c)(a+c)$
 
 The last step can be verified by expanding $(a+b)(b+c)(a+c) = (ab+b^2+ac+bc)(a+c) = a^2b + ab^2 + a^2c + 2abc + b^2c + ac^2 + bc^2$, which matches. $\square$
 
-## Meta-Cognition
-
-Most problems you encounter will not have a simple expression waiting to be easily factored. In such cases, it may be useful to add a term to make the expression factorable (as discussed in *Simon's Factoring Trick*). 
-
-> Consider $a^2 + b^2 + ab = (ab)^2$. 
-
-This can be easily simplified if we look and see how the left hand side is *almost* $a^2 + b^2 + 2ab = (a + b) ^2$. We can attain this by simply adding $ab$ to be sides.
-
-$(a + b)^2 = (ab)^2 + ab, (a+b)^2=ab(ab+1)$
-
-This is much easier to work with than the last expression not only because we have reduced this into products and perfect-squares, but also because we can use the fact that $ab$ and $ab+1$ are relatively prime.
-
-Furthermore, problems may involve evaluting an expression involving $ab$ terms given only the values of $a+b$ and $a^2 + b^2$, we can reverse-engineer from one of our factorizations, i.e, $(a+b)^2=a^2+b^2+2ab$ to isolate for $ab$
-
-The best thing to think about when you see a *nasty* expression is to look at the equation, notice any patterns, add terms/factor accoridngly, and take adavntage of the simplified equation.
-
-
-### Example Problem
-
-> **2023 AMC 10B | Problem 14:** How many ordered pairs of integers $(m, n)$ satisfy the equation $m^2+mn+n^2 = m^2n^2$?
-
-As discussed above, we look at the equation for a bit. The left hand side is *almost* $(m+n)^2$. Wwe can add $mn$ to both sides to *complete the square*
-
-$(m + n)^2 = m^2n^2 + mn = mn(mn + 1)$
-
-Now, we have to use a *little* bit of observational skills and number theory. Notice first that in the prime factorization of a perfect square (here, the $(m+n)^2$ term), every prime has an even exponent. Also, notice how $mn$ and $mn+1$ are relatively prime, that means they don't share any prime factors. Hence, for their product to be a perfect square, both $mn$ and $mn+1$ must be perfect squares!
-
-Two consecutive numbers being perfect squares indeed does not happen often, the only case is $(0, 1)$. This gives $(m + n)^2 = mn(mn + 1) = 0\cdot1 = 0$. This tells us $m = -n$. Now we do casework:
-
-1) $mn = 0, m = -n: (m, n) = (0, 0)$
-2) $mn + 1 = 0, m = -n: (m, n) = (1, -1), (-1, 1)$
-
-These were all the cases making the answer $\boxed{3} $
+## Direct Application
 
 > **2022 AMC 10B | Problem 13:** The positive difference between a pair of primes is equal to $2$, and the positive difference between the cubes of the two primes is $31106$. What is the sum of the digits of the least prime that is greater than those two primes?
 
@@ -133,6 +101,40 @@ $(b+1)^2 = 5184 = 72^2$
 $b + 1 = 72 \implies b = 71$
 
 So the twin primes are $71$ and $73$. The next prime after $73$ is $79$, and the sum of its digits is $7 + 9 = \boxed{16}$
+
+## Meta-Cognition
+
+Most problems you encounter will not have a simple expression waiting to be easily factored. In such cases, it may be useful to add a term to make the expression factorable (as discussed in *Simon's Factoring Trick*). 
+
+> Consider $a^2 + b^2 + ab = (ab)^2$. 
+
+This can be easily simplified if we look and see how the left hand side is *almost* $a^2 + b^2 + 2ab = (a + b) ^2$. We can attain this by simply adding $ab$ to be sides.
+
+$(a + b)^2 = (ab)^2 + ab, (a+b)^2=ab(ab+1)$
+
+This is much easier to work with than the last expression not only because we have reduced this into products and perfect-squares, but also because we can use the fact that $ab$ and $ab+1$ are relatively prime.
+
+Furthermore, problems may involve evaluating an expression involving $ab$ terms given only the values of $a+b$ and $a^2 + b^2$, we can reverse-engineer from one of our factorizations, i.e, $(a+b)^2=a^2+b^2+2ab$ to isolate for $ab$
+
+The best thing to think about when you see a *nasty* expression is to look at the equation, notice any patterns, add terms/factor accordingly, and take advantage of the simplified equation.
+
+
+### Example Problem
+
+> **2023 AMC 10B | Problem 14:** How many ordered pairs of integers $(m, n)$ satisfy the equation $m^2+mn+n^2 = m^2n^2$?
+
+As discussed above, we look at the equation for a bit. The left hand side is *almost* $(m+n)^2$. We can add $mn$ to both sides to *complete the square*
+
+$(m + n)^2 = m^2n^2 + mn = mn(mn + 1)$
+
+Now, we have to use a *little* bit of observational skills and number theory. Notice first that in the prime factorization of a perfect square (here, the $(m+n)^2$ term), every prime has an even exponent. Also, notice how $mn$ and $mn+1$ are relatively prime, that means they don't share any prime factors. Hence, for their product to be a perfect square, both $mn$ and $mn+1$ must be perfect squares!
+
+Two consecutive numbers being perfect squares indeed does not happen often, the only case is $(0, 1)$. This gives $(m + n)^2 = mn(mn + 1) = 0\cdot1 = 0$. This tells us $m = -n$. Now we do casework:
+
+1) $mn = 0, m = -n: (m, n) = (0, 0)$
+2) $mn + 1 = 0, m = -n: (m, n) = (1, -1), (-1, 1)$
+
+These were all the cases making the answer $\boxed{3} $
 
 ## Practice Problems
 

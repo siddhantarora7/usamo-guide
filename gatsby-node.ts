@@ -17,8 +17,7 @@ const SECTION_FROM_CONTENT_DIR = {
   '4_USAMO': 'usamo',
 } as const;
 
-const READ_ONLY_EXTRA_PROBLEMS =
-  process.env.GATSBY_READ_ONLY_EXTRA_PROBLEMS !== 'false';
+const READ_ONLY_EXTRA_PROBLEMS = "false"
 
 type SectionID = keyof typeof freshOrdering.SECTION_LABELS;
 

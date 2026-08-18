@@ -111,7 +111,9 @@ function insertPromptIntoChildren(children: React.ReactNode): React.ReactNode {
     );
   })();
 
-  const prompt = <NotSignedInWarning key="not-signed-in-warning" />;
+  // Warning is now rendered at the top of the page (see return below).
+  // Keeping insertPromptIntoChildren intact for future use.
+  const prompt = null; // <NotSignedInWarning key="not-signed-in-warning" />;
 
   return [
     ...childList.slice(0, insertionIndex),
@@ -141,7 +143,12 @@ const Markdown = (props: { body: string }) => {
       })()
     : mdxComponent;
 
-  return <div className="markdown">{renderedContent}</div>;
+  return (
+    <div className="markdown">
+      <NotSignedInWarning key="not-signed-in-warning" />
+      {renderedContent}
+    </div>
+  );
 };
 
 export default React.memo(Markdown);

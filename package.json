@@ -3,7 +3,7 @@
   "private": true,
   "description": "A free collection of curated, high-quality math resources from AMC 8 to USAMO.",
   "version": "0.1.0",
-  "author": "Nathan Wang <contact@usamoguide.com>",
+  "author": "CMI",
   "engines": {
     "node": ">=20.18.1"
   },
@@ -136,7 +136,7 @@
   },
   "license": "MIT",
   "scripts": {
-    "build": "node scripts/compile-figures.mjs && node -e \"require('fs').copyFileSync('content/problems.schema.json','static/problems.schema.json')\" && gatsby build",
+    "build": "node scripts/compile-figures.mjs && node -e \"require('fs').copyFileSync('content/problems.schema.json','static/problems.schema.json')\" && cross-env GATSBY_CPU_COUNT=1 gatsby build",
     "compile:figures": "node scripts/compile-figures.mjs",
     "dev": "cross-env NODE_OPTIONS=--max-old-space-size=8192 gatsby develop",
     "dev:nohmr": "cross-env GATSBY_DISABLE_HOT_RELOAD=1 NODE_OPTIONS=--max-old-space-size=8192 gatsby develop",
@@ -181,6 +181,7 @@
     "instantsearch.js": "4.56.9",
     "latex": "^0.0.1",
     "latex.js": "^0.12.6",
+    "lenis": "^1.3.26",
     "lucide-react": "^0.577.0",
     "ogl": "^1.0.11",
     "supabase": "^2.76.11",

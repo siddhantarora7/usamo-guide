@@ -1,6 +1,9 @@
 import { Link } from 'gatsby';
 import * as React from 'react';
 
+/** How far the hero backdrop trails the page scroll, as a fraction of it. */
+const HERO_PARALLAX_FACTOR = 0.35;
+
 export default function AetherFlowHero(): JSX.Element {
   const subtitles = React.useMemo(
     () => [
@@ -15,6 +18,38 @@ export default function AetherFlowHero(): JSX.Element {
   const [subtitleIndex, setSubtitleIndex] = React.useState(0);
   const [typedSubtitle, setTypedSubtitle] = React.useState('');
   const [isDeleting, setIsDeleting] = React.useState(false);
+  const backgroundRef = React.useRef<HTMLDivElement>(null);
+
+  // Parallax: the backdrop trails the page as the hero scrolls away.
+  React.useEffect(() => {
+    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+
+    let frameId: number | null = null;
+    const render = () => {
+      frameId = null;
+      const background = backgroundRef.current;
+      if (!background) return;
+      background.style.transform = `translate3d(0, ${
+        window.scrollY * HERO_PARALLAX_FACTOR
+      }px, 0) scale(1.12)`;
+    };
+    const onScroll = () => {
+      if (frameId === null) frameId = requestAnimationFrame(render);
+    };
+
+    render();
+    window.addEventListener('scroll', onScroll, { passive: true });
+    return () => {
+      window.removeEventListener('scroll', onScroll);
+      if (frameId !== null) cancelAnimationFrame(frameId);
+    };
+  }, []);
+
+  const entranceClass = (direction: 'up' | 'down' = 'up') =>
+    direction === 'up' ? 'hero-enter-up' : 'hero-enter-down';
+  const entranceDelay = (delay: number): React.CSSProperties => ({
+    animationDelay: `${delay}ms`,
+  });
 
   React.useEffect(() => {
     const current = subtitles[subtitleIndex];
@@ -47,18 +82,39 @@ export default function AetherFlowHero(): JSX.Element {
       style={{ backgroundColor: 'var(--bg-page)' }}
     >
       <div
-        className="pointer-events-none absolute inset-0 z-0 scale-105 blur-[10px]"
+        ref={backgroundRef}
+        className="pointer-events-none absolute inset-0 z-0 will-change-transform"
         style={{
-          backgroundImage:
-            "url('images/bg6.jpg')",
+          backgroundImage: "url('/images/hero-background.jpg')",
           backgroundSize: 'cover',
           backgroundPosition: 'center',
+          transform: 'scale(1.12)',
+        }}
+      />
+
+      {/* Purple gradients feathering both edges into the page background */}
+      <div
+        className="pointer-events-none absolute inset-0 z-0"
+        style={{
+          background: `linear-gradient(to right, rgba(35, 10, 62, 0.95) 0%, rgba(48, 18, 84, 0.72) 10%, rgba(72, 33, 118, 0.5) 20%, rgba(93, 46, 141, 0.32) 30%, rgba(109, 59, 159, 0.19) 40%, rgba(126, 72, 180, 0.1) 50%),
+            linear-gradient(to left, rgba(35, 10, 62, 0.95) 0%, rgba(48, 18, 84, 0.72) 10%, rgba(72, 33, 118, 0.5) 20%, rgba(93, 46, 141, 0.32) 30%, rgba(109, 59, 159, 0.19) 40%, rgba(126, 72, 180, 0.1) 50%)`,
+        }}
+      />
+
+      {/* Purple falloff so the image doesn't butt straight into the page background */}
+      <div
+        className="pointer-events-none absolute inset-x-0 bottom-0 z-0 h-64 md:h-80"
+        style={{
+          background: `linear-gradient(to bottom, rgba(140, 84, 196, 0) 0%, rgba(109, 59, 159, 0.22) 32%, rgba(72, 33, 118, 0.55) 58%, rgba(35, 10, 62, 0.85) 80%, var(--bg-page) 100%)`,
         }}
       />
 
       {/* ── Top left info stack ── */}
       <div className="relative z-10 px-6 pt-6 md:px-10">
-        <div className="inline-flex flex-col items-center gap-3">
+        <div
+          className={`inline-flex flex-col items-center gap-3 ${entranceClass('down')}`}
+          style={entranceDelay(0)}
+        >
           <a
             href="https://discord.gg/WZge4DWUuy"
             target="_blank"
@@ -81,31 +137,52 @@ export default function AetherFlowHero(): JSX.Element {
       </div>
 
       {/* ── Center content ── */}
-      <div className="relative z-10 flex flex-1 flex-col items-center justify-center px-6 text-center">
-        <div className="mb-5 inline-flex items-center rounded-full bg-white/[0.08] px-4 py-2 font-mono text-[11px] font-bold tracking-[0.28em] text-[#F5F0FA] uppercase backdrop-blur-md">
+      <div className="relative z-10 flex flex-1 flex-col items-center justify-center px-6 pb-24 text-center md:pb-32">
+        <div
+          className={`mb-5 inline-flex items-center rounded-full bg-white/[0.08] px-4 py-2 font-mono text-[11px] font-bold tracking-[0.28em] text-[#F5F0FA] uppercase backdrop-blur-md ${entranceClass('down')}`}
+          style={entranceDelay(120)}
+        >
           {'Written by USA(J)MO Medalists'}
         </div>
 
         <div className="flex flex-col items-center justify-center gap-4 md:flex-row md:items-end md:gap-6">
           <div className="relative inline-block">
             <h1 className="font-mono text-6xl font-extrabold tracking-tight text-[#F5F0FA] md:text-8xl lg:text-9xl">
-              {'USAMO Guide'}
+              <span
+                className={`inline-block ${entranceClass()}`}
+                style={entranceDelay(240)}
+              >
+                {'USAMO'}
+              </span>{' '}
+              <span
+                className={`inline-block ${entranceClass()}`}
+                style={entranceDelay(560)}
+              >
+                {'Guide'}
+              </span>
             </h1>
             <img
               src="/images/Titlemascot.png"
               alt=""
               aria-hidden="true"
-              className="pointer-events-none absolute -top-6 -right-5 hidden w-16 rotate-[14deg] min-[770px]:block md:-top-8 md:-right-7 md:w-20 lg:-top-10 lg:-right-9 lg:w-24"
+              className="hero-mascot-enter pointer-events-none absolute -top-6 -right-5 hidden w-16 rotate-[14deg] min-[770px]:block md:-top-8 md:-right-7 md:w-20 lg:-top-10 lg:-right-9 lg:w-24"
+              style={entranceDelay(880)}
             />
           </div>
         </div>
 
-        <p className="mt-5 min-h-[2.25rem] font-mono text-xl font-semibold text-[#F1EAF7] md:min-h-[2.5rem] md:text-2xl">
+        <p
+          className={`mt-5 min-h-[2.25rem] font-mono text-xl font-semibold text-[#F1EAF7] md:min-h-[2.5rem] md:text-2xl ${entranceClass()}`}
+          style={entranceDelay(1120)}
+        >
           {typedSubtitle}
           <span className="ml-1 inline-block h-[1.05em] w-[0.09em] animate-pulse bg-[#F1EAF7] align-[-0.15em]" />
         </p>
 
-        <div className="mt-10 flex flex-wrap items-center justify-center gap-4">
+        <div
+          className={`mt-10 flex flex-wrap items-center justify-center gap-4 ${entranceClass()}`}
+          style={entranceDelay(1280)}
+        >
           <Link
             to="/dashboard"
             className="purple-motion-effect inline-flex items-center justify-center rounded-full px-6 py-3 font-mono text-lg leading-tight font-bold md:px-8 md:py-3"
@@ -142,7 +219,10 @@ export default function AetherFlowHero(): JSX.Element {
       </div>
 
       {/* ── Bottom bar ── */}
-      <div className="relative z-10 ml-auto flex max-w-2xl flex-col items-center gap-3 px-12 pt-6 pb-12 text-right">
+      <div
+        className={`relative z-10 ml-auto flex max-w-2xl flex-col items-center gap-3 px-12 pt-6 pb-12 text-right ${entranceClass()}`}
+        style={entranceDelay(1440)}
+      >
         {/* Bottom-right: Open source */}
         <a
           href="https://github.com/usamoguide/usamo-guide"

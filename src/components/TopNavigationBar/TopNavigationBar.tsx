@@ -1,9 +1,7 @@
 import { Popover, PopoverButton, PopoverPanel } from '@headlessui/react';
 import {
-  AcademicCapIcon,
   BookmarkIcon,
   ChartBarIcon,
-  ChatAlt2Icon,
   ChatAltIcon,
   ChevronDownIcon,
   CogIcon,
@@ -13,7 +11,6 @@ import {
   LogoutIcon,
   PresentationChartLineIcon,
   QuestionMarkCircleIcon,
-  TerminalIcon,
   UserGroupIcon,
 } from '@heroicons/react/solid';
 import classNames from 'classnames';
@@ -28,7 +25,6 @@ import {
 } from '../../context/UserDataContext/UserDataContext';
 import { LoadingSpinner } from '../elements/LoadingSpinner';
 import Logo from '../Logo';
-import LogoSquare from '../LogoSquare';
 import SectionsDropdown from '../SectionsDropdown';
 import Banner from './Banner';
 import { UserAvatarMenu } from './UserAvatarMenu';
@@ -39,6 +35,8 @@ export default function TopNavigationBar({
   currentSection = null,
   hidePromoBar = false,
   redirectToDashboard = false,
+  /** Staggered entrance for the nav items. Only the landing page uses it. */
+  animateEntrance = false,
 }) {
   const currentUser = useCurrentUser();
   const contestsUrl = 'https://contests.usamoguide.com/';
@@ -123,13 +121,26 @@ export default function TopNavigationBar({
               <Link
                 to={linkLogoToIndex ? '/' : '/dashboard'}
                 state={{ redirect: redirectToDashboard }}
-                className="flex shrink-0 items-center"
+                className={classNames(
+                  'flex shrink-0 items-center',
+                  animateEntrance && 'nav-item-enter'
+                )}
               >
                 <div className="h-8 sm:h-9">
                   <Logo />
                 </div>
               </Link>
-              <div className={`hidden space-x-8 lg:ml-8 lg:flex`}>
+              <div
+                className={classNames(
+                  'hidden space-x-8 lg:ml-8 lg:flex',
+                  animateEntrance && 'nav-enter'
+                )}
+                style={
+                  animateEntrance
+                    ? ({ '--nav-enter-base': '110ms' } as React.CSSProperties)
+                    : undefined
+                }
+              >
                 <SectionsDropdown currentSection={currentSection} />
                 <Link
                   to="/problems/"
@@ -295,7 +306,17 @@ export default function TopNavigationBar({
               </button>
             </div>
             <div className="hidden h-6 self-center border-l border-gray-200 lg:mx-3 lg:block dark:border-gray-700" />
-            <div className="hidden lg:flex lg:items-center">
+            <div
+              className={classNames(
+                'hidden lg:flex lg:items-center',
+                animateEntrance && 'nav-enter'
+              )}
+              style={
+                animateEntrance
+                  ? ({ '--nav-enter-base': '770ms' } as React.CSSProperties)
+                  : undefined
+              }
+            >
               {currentUser ? (
                 <UserAvatarMenu
                   currentUser={currentUser}

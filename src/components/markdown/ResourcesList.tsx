@@ -2,6 +2,7 @@ import * as React from 'react';
 import { ResourceInfo } from '../../models/resource';
 import { books } from '../../utils/books';
 import { ListTable } from './ListTable/ListTable';
+import PGS from './PGS';
 import ResourcesListItem from './ResourcesListItem';
 
 export function ResourcesList({

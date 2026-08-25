@@ -4,7 +4,13 @@ import classNames from 'classnames';
 import { Link, navigate } from 'gatsby';
 import Lenis from 'lenis';
 import 'lenis/dist/lenis.css';
-import { Github, Instagram, Twitter } from 'lucide-react';
+import {
+  ChevronLeft,
+  ChevronRight,
+  Github,
+  Instagram,
+  Twitter,
+} from 'lucide-react';
 import * as React from 'react';
 import AetherFlowHero from '../components/Index/AetherFlowHero';
 import LightRays from '../components/Index/LightRays';
@@ -68,10 +74,44 @@ const PREVIEW_VIEWPORT_WIDTH = 1440;
 /** Pixels per frame the preview auto-scrolls until the visitor takes over. */
 const PREVIEW_SCROLL_SPEED = 0.6;
 
-const impactStats = [
-  { value: '180k+', label: 'Students reached' },
-  { value: '$0', label: 'Cost, forever' },
-  { value: '100%', label: 'Student-run' },
+/**
+ * Core Mission collage: real screenshots from the Bangladesh program, not
+ * marketing stats. Each tile flips backwards on hover/tap to reveal the story
+ * behind the picture.
+ */
+const missionMoments = [
+  {
+    id: 'lecture',
+    imageSrc: '/images/Banglapic1.jpg',
+    alt: 'A live Discord lecture opening the Numero Odyssey Delta program, with the instructor introduction slide on screen and students chatting in Bengali.',
+    eyebrow: 'Week 1 - Live lecture',
+    title: 'Taught in their language',
+    body: 'Emon opens year one of the Numero Odyssey Delta program for students across Bangladesh - lectured in Bengali, because language should never be what keeps someone out of olympiad math.',
+  },
+  {
+    id: 'room',
+    imageSrc: '/images/banglapic2.jpg',
+    alt: 'A Discord voice channel filled with roughly thirty student participants during a live class, with the chat active alongside.',
+    eyebrow: 'Every week',
+    title: 'A room that keeps filling',
+    body: 'Thirty-plus students in one voice channel on a weeknight, chat running the entire time. No tuition, no application, no waitlist - just a link.',
+  },
+  {
+    id: 'struggle',
+    imageSrc: '/images/bangla3.jpg',
+    alt: 'A class slide titled "Getting Stuck Is Part of the Process" being presented to a full voice channel of students.',
+    eyebrow: 'How we teach',
+    title: 'We teach the struggle',
+    body: 'Try it yourself first. Ask your peers in Discord second. Reach an instructor third. That habit is what actually turns students into olympiad solvers.',
+  },
+  {
+    id: 'mocks',
+    imageSrc: '/images/bangla4.jpg',
+    alt: 'A class slide titled "Monthly Exams + Global Mentorship" describing mock AMC and AIME tests and international instructors.',
+    eyebrow: 'What they get',
+    title: 'Mock exams, real mentors',
+    body: 'Monthly AMC and AIME mocks, reviewed by competitive-math specialists from around the world. Priced at exactly zero, the way it will always be.',
+  },
 ];
 
 const builderProfiles = [
@@ -105,6 +145,232 @@ function RevealSection({
       style={{ animationDelay: `${delay}ms` }}
     >
       {children}
+    </div>
+  );
+}
+
+/**
+ * Sliding carousel of real frames from the Bangladesh program.
+ *
+ * Built on native scroll-snap rather than a transform track, so swiping works
+ * on touch for free and the arrows/dots are just scroll commands on top of it.
+ */
+const AUTOPLAY_MS = 5500;
+
+function MissionCarousel() {
+  const scrollerRef = React.useRef<HTMLDivElement>(null);
+  const activeIndexRef = React.useRef(0);
+  const isPausedRef = React.useRef(false);
+  const [activeIndex, setActiveIndex] = React.useState(0);
+  const [isAutoplayOn, setIsAutoplayOn] = React.useState(true);
+  const [prefersReducedMotion, setPrefersReducedMotion] = React.useState(false);
+  const { ref: revealRef, isVisible } = useScrollReveal<HTMLDivElement>(0.15);
+
+  React.useEffect(() => {
+    const query = window.matchMedia('(prefers-reduced-motion: reduce)');
+    const sync = () => setPrefersReducedMotion(query.matches);
+    sync();
+    query.addEventListener('change', sync);
+    return () => query.removeEventListener('change', sync);
+  }, []);
+
+  const scrollToIndex = React.useCallback(
+    (index: number) => {
+      const scroller = scrollerRef.current;
+      const slide = scroller?.children[index] as HTMLElement | undefined;
+      if (!scroller || !slide) return;
+      scroller.scrollTo({
+        left: slide.offsetLeft,
+        behavior: prefersReducedMotion ? 'auto' : 'smooth',
+      });
+    },
+    [prefersReducedMotion]
+  );
+
+  /* Whatever moved the scroller — swipe, arrows, autoplay — the dots follow it. */
+  React.useEffect(() => {
+    const scroller = scrollerRef.current;
+    if (!scroller) return;
+    let frame = 0;
+    const syncActiveIndex = () => {
+      cancelAnimationFrame(frame);
+      frame = requestAnimationFrame(() => {
+        let nearest = 0;
+        let nearestDistance = Infinity;
+        Array.from(scroller.children).forEach((child, index) => {
+          const distance = Math.abs(
+            (child as HTMLElement).offsetLeft - scroller.scrollLeft
+          );
+          if (distance < nearestDistance) {
+            nearestDistance = distance;
+            nearest = index;
+          }
+        });
+        activeIndexRef.current = nearest;
+        setActiveIndex(nearest);
+      });
+    };
+    scroller.addEventListener('scroll', syncActiveIndex, { passive: true });
+    syncActiveIndex();
+    return () => {
+      scroller.removeEventListener('scroll', syncActiveIndex);
+      cancelAnimationFrame(frame);
+    };
+  }, []);
+
+  React.useEffect(() => {
+    if (!isAutoplayOn || prefersReducedMotion) return;
+    const timer = window.setInterval(() => {
+      if (isPausedRef.current || document.hidden) return;
+      scrollToIndex((activeIndexRef.current + 1) % missionMoments.length);
+    }, AUTOPLAY_MS);
+    return () => window.clearInterval(timer);
+  }, [isAutoplayOn, prefersReducedMotion, scrollToIndex]);
+
+  /* Once a visitor takes over, stop yanking the slides out from under them. */
+  const goTo = (index: number) => {
+    setIsAutoplayOn(false);
+    scrollToIndex((index + missionMoments.length) % missionMoments.length);
+  };
+
+  return (
+    <div
+      ref={revealRef}
+      role="group"
+      aria-roledescription="carousel"
+      aria-label="Scenes from the Bangladesh program"
+      /* Racks into focus as it enters the viewport, like a lens settling. */
+      style={
+        prefersReducedMotion
+          ? undefined
+          : {
+              opacity: isVisible ? 1 : 0,
+              filter: isVisible ? 'blur(0px)' : 'blur(18px)',
+              transform: isVisible
+                ? 'translateY(0) scale(1)'
+                : 'translateY(32px) scale(0.965)',
+              transition:
+                'opacity 900ms cubic-bezier(0.22, 1, 0.36, 1) 120ms, filter 1150ms cubic-bezier(0.22, 1, 0.36, 1) 120ms, transform 1150ms cubic-bezier(0.22, 1, 0.36, 1) 120ms',
+              willChange: isVisible ? 'auto' : 'filter, transform, opacity',
+            }
+      }
+      onMouseEnter={() => (isPausedRef.current = true)}
+      onMouseLeave={() => (isPausedRef.current = false)}
+      onFocusCapture={() => (isPausedRef.current = true)}
+      onBlurCapture={() => (isPausedRef.current = false)}
+    >
+      <div
+        ref={scrollerRef}
+        tabIndex={0}
+        onKeyDown={event => {
+          if (event.key === 'ArrowRight') {
+            event.preventDefault();
+            goTo(activeIndexRef.current + 1);
+          } else if (event.key === 'ArrowLeft') {
+            event.preventDefault();
+            goTo(activeIndexRef.current - 1);
+          }
+        }}
+        className="hide-scrollbar relative flex snap-x snap-mandatory overflow-x-auto rounded-2xl focus:outline-none focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[rgba(240,194,255,0.7)]"
+      >
+        {missionMoments.map((moment, index) => (
+          <div
+            key={moment.id}
+            role="group"
+            aria-roledescription="slide"
+            aria-label={`${index + 1} of ${missionMoments.length}`}
+            className="w-full shrink-0 snap-start"
+          >
+            <div
+              className="relative aspect-[16/10] w-full overflow-hidden rounded-2xl border border-white/10 sm:aspect-[16/9]"
+              style={{
+                background: 'var(--card-bg)',
+                boxShadow: '0 30px 70px rgba(0, 0, 0, 0.42)',
+              }}
+            >
+              <img
+                src={moment.imageSrc}
+                alt={moment.alt}
+                loading={index === 0 ? 'eager' : 'lazy'}
+                className="h-full w-full object-cover object-center"
+              />
+              <div
+                className="pointer-events-none absolute inset-0"
+                style={{
+                  background:
+                    'linear-gradient(to top, rgba(12, 9, 22, 0.97) 0%, rgba(12, 9, 22, 0.94) 32%, rgba(12, 9, 22, 0.6) 50%, rgba(12, 9, 22, 0.12) 72%, rgba(12, 9, 22, 0) 86%)',
+                }}
+              />
+              <div className="absolute inset-x-0 bottom-0 p-5 sm:p-7 md:p-9">
+                <span
+                  className="font-mono text-[10px] font-bold tracking-[0.2em] uppercase md:text-[11px]"
+                  style={{ color: MAUVE }}
+                >
+                  {moment.eyebrow}
+                </span>
+                <h3
+                  className="mt-1.5 text-xl leading-tight font-bold tracking-tight sm:text-2xl md:text-3xl"
+                  style={{ color: TEXT_PRIMARY }}
+                >
+                  {moment.title}
+                </h3>
+                <p
+                  className="mt-2 max-w-2xl text-sm leading-relaxed sm:text-base md:mt-3 md:text-lg"
+                  style={{ color: TEXT_SECONDARY }}
+                >
+                  {moment.body}
+                </p>
+              </div>
+            </div>
+          </div>
+        ))}
+      </div>
+
+      <div className="mt-5 flex items-center justify-between gap-4 md:mt-6">
+        <div className="flex items-center gap-2.5">
+          {missionMoments.map((moment, index) => (
+            <button
+              key={moment.id}
+              type="button"
+              onClick={() => goTo(index)}
+              aria-label={`Go to ${moment.title}`}
+              aria-current={index === activeIndex}
+              className="group cursor-pointer py-2"
+            >
+              <span
+                className="block h-[3px] rounded-full transition-all duration-500"
+                style={{
+                  width: index === activeIndex ? 40 : 16,
+                  background:
+                    index === activeIndex ? MAUVE : 'rgba(244, 237, 234, 0.26)',
+                }}
+              />
+            </button>
+          ))}
+        </div>
+
+        <div className="flex items-center gap-2.5">
+          {[
+            { label: 'Previous slide', step: -1, Icon: ChevronLeft },
+            { label: 'Next slide', step: 1, Icon: ChevronRight },
+          ].map(({ label, step, Icon }) => (
+            <button
+              key={label}
+              type="button"
+              onClick={() => goTo(activeIndexRef.current + step)}
+              aria-label={label}
+              className="flex h-10 w-10 cursor-pointer items-center justify-center rounded-full border transition-colors duration-300 hover:bg-[rgba(240,194,255,0.14)]"
+              style={{
+                borderColor: 'rgba(240, 194, 255, 0.32)',
+                background: 'rgba(20, 16, 36, 0.5)',
+                color: MAUVE,
+              }}
+            >
+              <Icon size={18} strokeWidth={2.2} />
+            </button>
+          ))}
+        </div>
+      </div>
     </div>
   );
 }
@@ -565,15 +831,15 @@ export default function IndexPage({ path }): JSX.Element {
           <div className="h-16 md:h-24"></div>
           <div className={containerClasses}>
             <RevealSection>
-              <div className="mx-auto grid max-w-6xl items-center gap-10 md:grid-cols-2 md:gap-14">
-                <div className="max-w-xl">
+              <div className="mx-auto max-w-6xl">
+                <div className="max-w-3xl">
                   <h2
                     className="text-3xl font-bold tracking-tight md:text-4xl 2xl:text-5xl"
                     style={{ color: TEXT_PRIMARY }}
                   >
                     Our Core Mission
                   </h2>
-                  <div className="h-5"></div>
+                  <div className="h-4 md:h-5"></div>
                   <p
                     className="text-lg leading-relaxed md:text-xl"
                     style={{ color: TEXT_SECONDARY }}
@@ -585,7 +851,7 @@ export default function IndexPage({ path }): JSX.Element {
                     to promote equity in learning math. Today that includes
                     supporting 100+ underprivileged students in Bangladesh.
                   </p>
-                  <div className="h-7 md:h-9"></div>
+                  <div className="h-7 md:h-8"></div>
                   <Link
                     to="/about"
                     className="purple-motion-effect inline-flex items-center justify-center rounded-full px-7 py-3 font-mono text-base leading-tight font-bold"
@@ -603,26 +869,10 @@ export default function IndexPage({ path }): JSX.Element {
                   </Link>
                 </div>
 
-                <div className="grid gap-4">
-                  {impactStats.map((stat, index) => (
-                    <RevealSection key={stat.label} delay={200 + index * 150}>
-                      <div
-                        className="flex items-center gap-6 rounded-2xl px-6 py-6"
-                        style={FAQ_CARD_STYLE}
-                      >
-                        <div
-                          className="text-4xl font-bold tracking-tight md:text-5xl"
-                          style={{ color: MAUVE }}
-                        >
-                          {stat.value}
-                        </div>
-                        <div className="text-base font-medium">
-                          {stat.label}
-                        </div>
-                      </div>
-                    </RevealSection>
-                  ))}
-                </div>
+                <div className="h-10 md:h-14"></div>
+
+                {/* The proof, not the pitch: real frames from the program. */}
+                <MissionCarousel />
               </div>
             </RevealSection>
 

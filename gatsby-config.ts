@@ -62,7 +62,7 @@ const plugins = [
     options: {
       path: `${__dirname}/content`,
       name: `content-images`,
-      ignore: [`**/*.json`, `**/*.mdx`],
+      ignore: [`**/*.json`, `**/*.mdx`, `**/problemBank/**`],
     },
   },
   {
@@ -70,6 +70,9 @@ const plugins = [
     options: {
       path: `${__dirname}/content`,
       name: `content`,
+      // problemBank contains 200MB+ of raw data dumps that the site never
+      // queries; sourcing them wastes build time and memory.
+      ignore: [`**/problemBank/**`],
     },
   },
   `gatsby-plugin-image`,

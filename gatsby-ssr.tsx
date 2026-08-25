@@ -19,3 +19,28 @@ const MagicScriptTag = () => {
 export const onRenderBody = ({ setPreBodyComponents }) => {
   setPreBodyComponents(<MagicScriptTag key="magic-script-tag" />);
 };
+
+// Gatsby inlines the entire global CSS bundle (~400KB) into the <head> of
+// every generated HTML page, which multiplies across thousands of problem
+// pages into gigabytes of build output. Swap the inlined <style data-href>
+// back to a <link> so the stylesheet is fetched once and cached.
+export const onPreRenderHTML = ({ getHeadComponents, replaceHeadComponents }) => {
+  if (process.env.NODE_ENV !== 'production') return;
+  const headComponents = getHeadComponents().map((component: any) => {
+    if (
+      component?.type === 'style' &&
+      component.props?.['data-href'] &&
+      component.props?.['data-identity'] === 'gatsby-global-css'
+    ) {
+      return (
+        <link
+          key={component.props['data-href']}
+          rel="stylesheet"
+          href={component.props['data-href']}
+        />
+      );
+    }
+    return component;
+  });
+  replaceHeadComponents(headComponents);
+};

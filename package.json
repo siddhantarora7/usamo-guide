@@ -136,7 +136,7 @@
   },
   "license": "MIT",
   "scripts": {
-    "build": "node scripts/compile-figures.mjs && node -e \"require('fs').copyFileSync('content/problems.schema.json','static/problems.schema.json')\" && cross-env GATSBY_CPU_COUNT=1 gatsby build",
+    "build": "node scripts/compile-figures.mjs && node -e \"require('fs').copyFileSync('content/problems.schema.json','static/problems.schema.json')\" && cross-env GATSBY_CPU_COUNT=1 NODE_OPTIONS=--max-old-space-size=6144 gatsby build",
     "compile:figures": "node scripts/compile-figures.mjs",
     "dev": "cross-env NODE_OPTIONS=--max-old-space-size=8192 gatsby develop",
     "dev:nohmr": "cross-env GATSBY_DISABLE_HOT_RELOAD=1 NODE_OPTIONS=--max-old-space-size=8192 gatsby develop",

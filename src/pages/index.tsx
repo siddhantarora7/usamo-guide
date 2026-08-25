@@ -74,10 +74,13 @@ const PREVIEW_VIEWPORT_WIDTH = 1440;
 /** Pixels per frame the preview auto-scrolls until the visitor takes over. */
 const PREVIEW_SCROLL_SPEED = 0.6;
 
+/** Applications to run a USAMO Guide chapter, like the one in Bangladesh. */
+const START_A_CHAPTER_FORM =
+  'https://docs.google.com/forms/d/e/1FAIpQLSc4QUgTlgaRC0Ljuns4-AIeuh51CMLK4G4BdbwzUCKVyyL46A/viewform?usp=dialog';
+
 /**
- * Core Mission collage: real screenshots from the Bangladesh program, not
- * marketing stats. Each tile flips backwards on hover/tap to reveal the story
- * behind the picture.
+ * Core Mission carousel: real screenshots from the Bangladesh program, not
+ * marketing stats. Each slide carries the story behind the picture.
  */
 const missionMoments = [
   {
@@ -832,7 +835,7 @@ export default function IndexPage({ path }): JSX.Element {
           <div className={containerClasses}>
             <RevealSection>
               <div className="mx-auto max-w-6xl">
-                <div className="max-w-3xl">
+                <div className="mx-auto max-w-3xl text-center">
                   <h2
                     className="text-3xl font-bold tracking-tight md:text-4xl 2xl:text-5xl"
                     style={{ color: TEXT_PRIMARY }}
@@ -852,8 +855,10 @@ export default function IndexPage({ path }): JSX.Element {
                     supporting 100+ underprivileged students in Bangladesh.
                   </p>
                   <div className="h-7 md:h-8"></div>
-                  <Link
-                    to="/about"
+                  <a
+                    href={START_A_CHAPTER_FORM}
+                    target="_blank"
+                    rel="noopener noreferrer"
                     className="purple-motion-effect inline-flex items-center justify-center rounded-full px-7 py-3 font-mono text-base leading-tight font-bold"
                     style={
                       {
@@ -865,8 +870,8 @@ export default function IndexPage({ path }): JSX.Element {
                       } as React.CSSProperties
                     }
                   >
-                    Read More About Us
-                  </Link>
+                    Start a Chapter
+                  </a>
                 </div>
 
                 <div className="h-10 md:h-14"></div>

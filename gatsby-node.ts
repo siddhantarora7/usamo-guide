@@ -145,6 +145,14 @@ if (!unshallowAttempted && hasGitRepo() && isShallowGitRepo()) {
   }
 }
 
+// `loadNodeContent` caches the file's text on `node.internal.content`, which
+// makes the File node itself as large as the file. Every `createParentChildLink`
+// below then re-serializes that whole node into LMDB, so a 5MB problems file
+// with 1000 problems serializes ~5GB and OOMs the build container. Read the
+// bytes off disk instead so the File node stays small.
+const readNodeContentUncached = (node): Promise<string> =>
+  fs.promises.readFile(node.absolutePath, 'utf8');
+
 // ideally problems would be its own query with
 // source nodes: https://www.gatsbyjs.com/docs/reference/config-files/gatsby-node/#sourceNodes
 let stream = fs.createWriteStream('ids.log', { flags: 'a' });
@@ -197,7 +205,7 @@ exports.onCreateNode = async api => {
     }
 
     if (isExtraProblems) {
-      const content = await loadNodeContent(node);
+      const content = await readNodeContentUncached(node);
       let parsedContent;
       try {
         parsedContent = JSON.parse(content);
@@ -234,7 +242,7 @@ exports.onCreateNode = async api => {
       });
       return;
     }
-    const content = await loadNodeContent(node);
+    const content = await readNodeContentUncached(node);
     let parsedContent;
     try {
       parsedContent = JSON.parse(content);

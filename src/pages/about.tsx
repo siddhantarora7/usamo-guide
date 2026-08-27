@@ -19,31 +19,40 @@ export default function AboutPage(props: PageProps) {
       <div
         data-page-tone="dark"
         className="min-h-screen"
-        style={{ background: 'linear-gradient(to bottom, #120F24 0%, #0E0B1F 48%, #0A0818 100%)' }}
+        style={{ background: 'var(--bg-page)' }}
       >
-        <main className="mx-auto max-w-4xl px-4 pb-16 pt-10 sm:px-6 lg:px-8">
+        <main className="mx-auto max-w-4xl px-4 pt-10 pb-16 sm:px-6 lg:px-8">
           <header className="mb-8">
-            <h1 className="text-4xl font-extrabold text-[#F4EDEA]">About USAMO Guide</h1>
+            <h1 className="text-4xl font-extrabold text-[#F4EDEA]">
+              Umm, so what is this "USAMO Guide" that everyone is talking about?
+            </h1>
             <p className="mt-3 text-lg text-[rgba(244,237,234,0.80)]">
-              USAMO Guide is a free, structured learning platform that helps students
-              progress from early contest problem solving to Olympiad-level proof
-              writing.
+              USAMO Guide is a free, structured learning platform that helps
+              students progress from early contest problem solving to
+              Olympiad-level proof writing.
             </p>
           </header>
 
           <section className="space-y-4 text-lg text-[rgba(244,237,234,0.80)]">
-            <h2 className="text-2xl font-bold text-[#F4EDEA]">Our mission</h2>
+            <h2 className="text-2xl font-bold text-[#F4EDEA]">Why do we exist / Our Philosophy</h2>
             <p>
-              We believe every motivated student should have access to high-quality
-              olympiad preparation. USAMO Guide organizes the best resources, problem
-              sets, and solutions into a single learning path.
+              What we do at USAMO Guide is take away the barriers of learning Math.  <br />
+              We have a chance to change the way all of us think about preparing for math olympiads. <br />
+              Gatekept Resources, Unstructured Learning and Online Courses that cost $$$ have kept Learning Olympiad maths restricted away from the rest of us. <br />
+              We think we have a chance to make a difference. <br />
             </p>
           </section>
 
           <section className="mt-10 space-y-4 text-lg text-[rgba(244,237,234,0.80)]">
-            <h2 className="text-2xl font-bold text-[#F4EDEA]">What we offer</h2>
+            <h2 className="text-2xl font-bold text-[#F4EDEA]">Okayyyy! I see y'all are ambitious, but what have you actually achieved till now?</h2>
+            <p>
+              Well, we have helped 130k+ students with getting all the resources they would ever need!, Here's a small list of what we give!
+            </p>
             <ul className="list-disc space-y-2 pl-6">
-              <li>Structured learning tracks for AMC 8, AMC 10/12, AIME, and USAMO.</li>
+              <li>
+                Structured learning tracks for AMC 8, AMC 10/12, AIME, and
+                USAMO.
+              </li>
               <li>Curated resources, explanations, and topic guidance.</li>
               <li>Extensive problem sets with full solutions and hints.</li>
               <li>Mock exams and contests through our contests platform.</li>
@@ -52,25 +61,31 @@ export default function AboutPage(props: PageProps) {
           </section>
 
           <section className="mt-10 space-y-4 text-lg text-[rgba(244,237,234,0.80)]">
-            <h2 className="text-2xl font-bold text-[#F4EDEA]">What makes us different</h2>
+            <h2 className="text-2xl font-bold text-[#F4EDEA]">
+              What makes us different
+            </h2>
             <p>
-              USAMO Guide is built by olympiad veterans and educators who care about
-              clarity, accessibility, and progression. We focus on sequencing topics,
-              highlighting common pitfalls, and giving students the right practice
-              at the right time.
+              USAMO Guide is made by HIGHSCHOOLERS and College Freshmen. <br /> 
+              Ones that have went through the experience how it felt to try prepare for olympiads without any resources, Ones that did so super recently. <br />
+              The adults who are in teaching do so for profit, They gotta earn some way or the other, don't they? We dont. We have no intention to make money off of you, We couldn't possibly gain anything by doing so. 
+              The only reason we exist is to help promote equity in learning math. 
             </p>
             <ul className="list-disc space-y-2 pl-6">
-              <li>Clear roadmaps that connect foundational topics to proof writing.</li>
+              <li>
+                Clear roadmaps that connect foundational topics to proof
+                writing.
+              </li>
               <li>Community-driven updates and feedback loops.</li>
               <li>Free access to the full curriculum.</li>
+              <li>Biweekly Contests that make sure you are preppared on test day.</li>
             </ul>
           </section>
 
           <section className="mt-10 space-y-4 text-lg text-[rgba(244,237,234,0.80)]">
             <h2 className="text-2xl font-bold text-[#F4EDEA]">Our aims</h2>
             <p>
-              We aim to make olympiad preparation less intimidating by breaking it
-              into achievable steps, helping students build confidence, and
+              We aim to make olympiad preparation less intimidating by breaking
+              it into achievable steps, helping students build confidence, and
               supporting long-term mathematical growth.
             </p>
           </section>
@@ -78,9 +93,8 @@ export default function AboutPage(props: PageProps) {
           <section className="mt-10 space-y-4 text-lg text-[rgba(244,237,234,0.80)]">
             <h2 className="text-2xl font-bold text-[#F4EDEA]">Get involved</h2>
             <p>
-              We welcome feedback, suggestions, and community contributions. If you
-              want to help improve the guide or share resources, reach out through
-              our contact page or join the community discussions.
+              Spot a gate we missed? Help us break it. <br />
+              Open a PR on GitHub, DM the admins on Discord, or email team@usamoguide.com. However you reach us, It's fine! You're not just giving feedback, you're holding the door open for another kid!
             </p>
           </section>
         </main>

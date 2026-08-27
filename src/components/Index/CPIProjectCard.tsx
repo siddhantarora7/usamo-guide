@@ -14,12 +14,12 @@ export const CPIProjectCard = ({
   url: string;
   children: React.ReactNode;
 }): JSX.Element => (
-  // <div className="rounded-lg border border-gray-100 dark:border-none dark:bg-gray-800 p-6 md:p-8 transition hover:shadow-lg relative flex flex-col">
-  <div className="relative flex flex-col rounded-lg border border-gray-200 bg-white p-6 transition hover:shadow-lg md:p-8 dark:border-none dark:bg-gray-800">
+  // <div className="rounded-lg dark:bg-gray-800 p-6 md:p-8 transition relative flex flex-col">
+  <div className="relative flex flex-col rounded-lg bg-[var(--card-bg)] p-6 transition md:p-8">
     <div className="flex-1">
       <div
         className={classNames(
-          'mb-4 flex h-12 w-12 items-center justify-center rounded-xl bg-linear-to-br text-white',
+          'mb-4 flex h-12 w-12 items-center justify-center rounded-xl text-white',
           iconClasses
         )}
       >

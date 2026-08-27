@@ -15,12 +15,20 @@
   src: url('/Font/Inter-Italic-VariableFont_opsz,wght.ttf') format('truetype');
 }
 
+@font-face {
+  font-family: 'Space Grotesk';
+  font-style: normal;
+  font-weight: 300 700;
+  font-display: swap;
+  src: url('/Font/SpaceGrotesk-VariableFont_wght.ttf') format('truetype');
+}
+
 @import 'tailwindcss';
 @import './theme.css' layer(base);
 
 
 @theme {
-  --color-dark-surface: #201C36; /* palette base */
+  --color-dark-surface: #101010; /* updated surface base */
   /* replace white-based emphasis with cream-based emphasis */
   --color-dark-high-emphasis: rgba(244, 237, 234, 0.90);
   --color-dark-med-emphasis: rgba(244, 237, 234, 0.68);
@@ -66,6 +74,7 @@
   ::backdrop,
   ::file-selector-button {
     border-color: var(--color-gray-200, currentColor);
+    font-family: var(--font-family);
   }
 
 

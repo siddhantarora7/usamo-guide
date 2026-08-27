@@ -56,32 +56,11 @@ export default function TopNavigationBar({
       iconSrc: '/images/otherresourcesicon.jpg',
     },
     {
-      name: 'AoPS Community',
-      description: 'Math contest discussions and Q&A on Art of Problem Solving.',
-      href: 'https://artofproblemsolving.com/community',
-      icon: ChatAlt2Icon,
-      iconSrc: '/images/aops_comm.jpg',
-    },
-    {
-      name: 'AoPS Wiki',
-      description: 'Official statements and solutions for AMC/AIME/USAMO.',
-      href: 'https://artofproblemsolving.com/wiki/index.php/Main_Page',
-      icon: TerminalIcon,
-      iconSrc: '/images/maacomp.jpg',
-    },
-    {
       name: 'USAMO Contests',
       description:
         'Live contests, archives, and contest-specific features on our contests platform.',
       href: contestsUrl,
       icon: ChartBarIcon,
-      iconSrc: '/images/Contestsicon.jpg',
-    },
-    {
-      name: 'MAA Competitions',
-      description: 'Official contest pages and information for AMC/AIME/USAMO.',
-      href: 'https://www.maa.org/math-competitions',
-      icon: AcademicCapIcon,
       iconSrc: '/images/Contestsicon.jpg',
     },
     {
@@ -188,9 +167,9 @@ export default function TopNavigationBar({
                   </PopoverButton>
                   <PopoverPanel
                     transition
-                    className="absolute left-1/2 z-[120] -mt-2 hidden w-screen max-w-md -translate-x-1/2 transform px-2 shadow-lg transition data-[closed]:translate-y-1 data-[closed]:opacity-0 data-[enter]:duration-200 data-[enter]:ease-out data-[leave]:duration-150 data-[leave]:ease-in sm:px-0 md:block lg:max-w-3xl"
+                    className="absolute left-1/2 z-[120] -mt-2 hidden w-screen max-w-md -translate-x-1/2 transform px-2 transition data-[closed]:translate-y-1 data-[closed]:opacity-0 data-[enter]:duration-200 data-[enter]:ease-out data-[leave]:duration-150 data-[leave]:ease-in sm:px-0 md:block lg:max-w-3xl"
                   >
-                    <div className="overflow-hidden rounded-lg shadow-lg ring-1 ring-black/5">
+                    <div className="overflow-hidden rounded-lg ring-1 ring-black/5">
                       <div className="relative grid gap-6 bg-white px-5 py-6 sm:gap-8 sm:p-8 lg:grid-cols-2 dark:bg-[#0D0D0D]">
                         {resources.map(item => {
                           const isInternal = item.href.startsWith('/');

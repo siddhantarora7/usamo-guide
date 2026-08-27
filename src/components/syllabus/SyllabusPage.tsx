@@ -17,14 +17,18 @@ import DashboardProgress, {
 } from '../Dashboard/DashboardProgress';
 import Layout from '../layout';
 import SEO from '../seo';
-import ModuleLink from './ModuleLink';
 import TopNavigationBar from '../TopNavigationBar/TopNavigationBar';
+import ModuleLink from './ModuleLink';
+import { useLastViewedModule } from '../../context/UserDataContext/properties/simpleProperties';
+import { useUserProgressOnModules } from '../../context/UserDataContext/properties/userProgress';
 
+
+/* All sections share the one page background; see --bg-page in src/styles/theme.css. */
 const HeroAccentColor: { [key in SectionID]: string } = {
-  foundations: 'from-[#09050D] to-[#160E1F]',
-  intermediate: 'from-[#0A0510] to-[#170F22]',
-  advanced: 'from-[#08040E] to-[#140C1C]',
-  usamo: 'from-[#07030C] to-[#120B19]',
+  foundations: 'bg-[var(--bg-page)]',
+  intermediate: 'bg-[var(--bg-page)]',
+  advanced: 'bg-[var(--bg-page)]',
+  usamo: 'bg-[var(--bg-page)]',
 };
 
 const SECTION_DESCRIPTION: { [key in SectionID]: React.ReactNode } = {
@@ -49,8 +53,8 @@ const SECTION_DESCRIPTION: { [key in SectionID]: React.ReactNode } = {
   ),
   advanced: (
     <>
-      Tackle olympiad-level ideas and harder AIME/USAMO crossover topics such
-      as advanced number theory, geometry transformations, and deep algebraic
+      Tackle olympiad-level ideas and harder AIME/USAMO crossover topics such as
+      advanced number theory, geometry transformations, and deep algebraic
       methods.
       <br />
       Expect longer chains of reasoning and proof-oriented structure.
@@ -102,6 +106,28 @@ export default function SyllabusPage({
   ];
   const problemsProgressInfo = useProblemsProgressInfo(problemIDs);
 
+  // Determine if the user has started any module in this division
+  const userProgressOnModules = useUserProgressOnModules();
+  const hasStarted = moduleIDs.some(
+    id =>
+      userProgressOnModules[id] &&
+      userProgressOnModules[id] !== 'Not Started'
+  );
+
+  // Build per-module URLs for this division: /{division}/{id}
+  const firstModuleURL = moduleIDs.length > 0 ? `/${division}/${moduleIDs[0]}` : '/dashboard';
+
+  // Last viewed module URL — only use it if it belongs to this division
+  const lastViewedModuleID = useLastViewedModule();
+  const lastViewedModuleURL =
+    lastViewedModuleID && moduleIDs.includes(lastViewedModuleID)
+      ? `/${division}/${lastViewedModuleID}`
+      : null;
+
+  // The button destination: prefer last-viewed in this division, else first module
+  const continueLearningURL = lastViewedModuleURL || firstModuleURL;
+
+
   const useProgressBarForCategory = (category: (typeof section)[0]) => {
     const categoryModuleIDs = category.items
       .filter((x): x is NonNullable<typeof x> => Boolean(x))
@@ -129,9 +155,9 @@ export default function SyllabusPage({
         image={null}
         pathname={path}
       />
-      <div className="relative min-h-screen overflow-hidden bg-gradient-to-b from-[#050308] via-[#090611] to-[#120A18]">
+      <div className="relative min-h-screen overflow-hidden bg-[var(--bg-page)]">
         <div className="pointer-events-none absolute inset-0">
-          <div className="absolute inset-0 opacity-30 [mask-image:radial-gradient(ellipse_at_center,white_30%,transparent_75%)]">
+          <div className="absolute inset-0 opacity-20">
             <svg className="h-full w-full" xmlns="http://www.w3.org/2000/svg">
               <defs>
                 <pattern
@@ -149,7 +175,11 @@ export default function SyllabusPage({
                   />
                 </pattern>
               </defs>
-              <rect width="100%" height="100%" fill="url(#syllabus-grid-pattern)" />
+              <rect
+                width="100%"
+                height="100%"
+                fill="url(#syllabus-grid-pattern)"
+              />
             </svg>
           </div>
         </div>
@@ -157,11 +187,10 @@ export default function SyllabusPage({
         <TopNavigationBar />
 
         <main>
-            <div className="relative py-12 sm:py-16">
+          <div className="relative py-12 sm:py-16">
             <div
-              className={`absolute inset-x-0 top-0 h-full bg-gradient-to-br ${HeroAccentColor[division]} opacity-90`}
+              className={`absolute inset-x-0 top-0 h-full ${HeroAccentColor[division]} opacity-90`}
             />
-            <div className="pointer-events-none absolute inset-x-0 top-0 h-full bg-[radial-gradient(circle_at_80%_20%,rgba(201,140,171,0.08),transparent_28%),radial-gradient(circle_at_20%_80%,rgba(112,66,138,0.16),transparent_34%)]" />
 
             <div className="relative mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
               <h1 className="mb-6 text-center text-5xl leading-10 font-black tracking-tight text-[#F4EDEA] sm:leading-none md:text-6xl">
@@ -172,74 +201,81 @@ export default function SyllabusPage({
               </p>
 
               {(division === 'advanced' || division === 'usamo') && (
-                <div className="mx-auto mb-8 max-w-4xl rounded-2xl border border-[#F0C2FF44] bg-[#171228]/76 px-6 py-4 text-center shadow-sm">
+                <div className="mx-auto mb-8 max-w-4xl rounded-2xl bg-[var(--card-bg)] px-6 py-4 text-center">
                   <p className="text-sm font-semibold text-[#F0C2FF] sm:text-base">
-                    This section is currently under development. The content you see here is filler for now.
+                    This section is currently under development. The content you
+                    see here is filler for now.
                   </p>
                 </div>
               )}
 
               <div className="mb-8 flex flex-wrap items-center justify-center gap-4">
                 <Link
-                  to="/dashboard"
-                  className="purple-motion-effect inline-flex items-center justify-center rounded-full px-6 py-3 md:px-8 md:py-3 font-mono text-lg font-bold leading-tight"
-                  style={{
-                    border: '1px solid rgba(240, 194, 255, 0.34)',
-                    background: 'linear-gradient(135deg, #5A2F87 0%, #C58BFF 100%)',
-                    boxShadow: 'none',
-                    '--pme-color': '#F4EDEA',
-                    '--pme-hover-color': '#201C36',
-                    '--pme-wipe-bg': '#F0C2FF',
-                  } as React.CSSProperties}
+                  to={continueLearningURL}
+                  className="purple-motion-effect inline-flex items-center justify-center rounded-full px-6 py-3 font-mono text-lg leading-tight font-bold md:px-8 md:py-3"
+                  style={
+                    {
+                      border: '1px solid rgba(240, 194, 255, 0.34)',
+                      background: '#6D3B9F',
+                      boxShadow: 'none',
+                      '--pme-color': '#F4EDEA',
+                      '--pme-hover-color': '#201C36',
+                      '--pme-wipe-bg': '#F0C2FF',
+                    } as React.CSSProperties
+                  }
                 >
-                  Continue Learning &gt;
+                  {hasStarted ? 'Continue Learning >' : 'Start Learning >'}
                 </Link>
                 <a
                   href="https://discord.gg/WZge4DWUuy"
                   target="_blank"
                   rel="noreferrer"
-                  className="purple-motion-effect inline-flex items-center justify-center rounded-full px-6 py-3 md:px-8 md:py-3 font-mono text-lg font-bold leading-tight"
-                  style={{
-                    border: '1px solid rgba(240, 194, 255, 0.34)',
-                    background: 'linear-gradient(135deg, #FFF8FF 0%, #F3E7FF 38%, #D7B2FF 100%)',
-                    boxShadow: 'none',
-                    '--pme-color': '#2C1842',
-                    '--pme-hover-color': '#201C36',
-                    '--pme-wipe-bg': '#F0C2FF',
-                  } as React.CSSProperties}
+                  className="purple-motion-effect inline-flex items-center justify-center rounded-full px-6 py-3 font-mono text-lg leading-tight font-bold md:px-8 md:py-3"
+                  style={
+                    {
+                      border: '1px solid rgba(240, 194, 255, 0.34)',
+                      background: '#EFE3FF',
+                      boxShadow: 'none',
+                      '--pme-color': '#2C1842',
+                      '--pme-hover-color': '#201C36',
+                      '--pme-wipe-bg': '#F0C2FF',
+                    } as React.CSSProperties
+                  }
                 >
                   Join Community
                 </a>
               </div>
 
-              <div className="mx-auto grid max-w-2xl gap-8 lg:max-w-full lg:grid-cols-2">
-                <div className="rounded-xl border border-[#F0C2FF33] bg-[#171228]/68 shadow-[0_10px_35px_rgba(17,10,29,0.36)] backdrop-blur sm:rounded-2xl">
-                  <div className="px-4 py-5 sm:p-6">
-                    <h3 className="text-lg leading-6 font-semibold text-[#F4EDEA]">
-                      Modules Progress
-                    </h3>
-                    <div className="mt-6">
-                      <DashboardProgress
-                        {...moduleProgressInfo}
-                        total={moduleIDs.length}
-                      />
+              {hasStarted && (
+                <div className="mx-auto grid max-w-2xl gap-8 lg:max-w-full lg:grid-cols-2">
+                  <div className="rounded-xl bg-[var(--card-bg)] backdrop-blur sm:rounded-2xl">
+                    <div className="px-4 py-5 sm:p-6">
+                      <h3 className="text-lg leading-6 font-semibold text-[#F4EDEA]">
+                        Modules Progress
+                      </h3>
+                      <div className="mt-6">
+                        <DashboardProgress
+                          {...moduleProgressInfo}
+                          total={moduleIDs.length}
+                        />
+                      </div>
+                    </div>
+                  </div>
+                  <div className="rounded-xl bg-[var(--card-bg)] backdrop-blur sm:rounded-2xl">
+                    <div className="px-4 py-5 sm:p-6">
+                      <h3 className="text-lg leading-6 font-semibold text-[#F4EDEA]">
+                        Problems Progress
+                      </h3>
+                      <div className="mt-6">
+                        <DashboardProgress
+                          {...problemsProgressInfo}
+                          total={problemIDs.length}
+                        />
+                      </div>
                     </div>
                   </div>
                 </div>
-                <div className="rounded-xl border border-[#F0C2FF33] bg-[#171228]/68 shadow-[0_10px_35px_rgba(17,10,29,0.36)] backdrop-blur sm:rounded-2xl">
-                  <div className="px-4 py-5 sm:p-6">
-                    <h3 className="text-lg leading-6 font-semibold text-[#F4EDEA]">
-                      Problems Progress
-                    </h3>
-                    <div className="mt-6">
-                      <DashboardProgress
-                        {...problemsProgressInfo}
-                        total={problemIDs.length}
-                      />
-                    </div>
-                  </div>
-                </div>
-              </div>
+              )}
             </div>
           </div>
 
@@ -247,7 +283,7 @@ export default function SyllabusPage({
             {section.map(category => (
               <div
                 key={category.name}
-                className="group/category flex flex-col rounded-2xl border border-[#F0C2FF2E] bg-[#171228]/58 p-4 shadow-sm transition hover:border-[#F0C2FF55] md:flex-row"
+                className="group/category flex flex-col rounded-2xl bg-[var(--card-bg)] p-4 transition md:flex-row"
               >
                 <div className="flex flex-1 flex-col items-center justify-center pr-0 text-center md:pr-12">
                   <h2 className="py-3 text-2xl leading-tight font-bold tracking-tight text-[#F4EDEA] transition group-hover/category:text-[#F0C2FF] md:text-3xl">

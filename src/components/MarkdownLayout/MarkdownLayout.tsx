@@ -21,7 +21,6 @@ import MobileSideNav from './MobileSideNav';
 import ModuleHeaders from './ModuleHeaders/ModuleHeaders';
 import ModuleProgressUpdateBanner from './ModuleProgressUpdateBanner';
 import NavBar from './NavBar';
-import NotSignedInWarning from './NotSignedInWarning';
 import ScrollProgressButton from './ScrollProgressButton';
 import LinksToEdit from './TableOfContents/LinksToEdit';
 import TableOfContentsBlock from './TableOfContents/TableOfContentsBlock';
@@ -119,7 +118,9 @@ export default function MarkdownLayout({
       moduleProgress !== 'Complete' &&
       (progress === 'Practicing' || progress === 'Complete')
     ) {
-      showConfetti!();
+      if (showConfetti) {
+        showConfetti();
+      }
     }
   };
 
@@ -138,8 +139,8 @@ export default function MarkdownLayout({
   let activeIDs: string[] = [];
   if (markdownData instanceof ModuleInfo) {
     activeIDs.push(markdownData.id);
-  } else {
-    activeIDs = solutionLayoutContext!.modulesThatHaveProblem.map(x => x.id);
+  } else if (solutionLayoutContext) {
+    activeIDs = solutionLayoutContext.modulesThatHaveProblem.map(x => x.id);
   }
 
   const layoutTree = (
@@ -164,8 +165,6 @@ export default function MarkdownLayout({
           <MobileAppBar />
 
           <ContentContainer>
-            <NotSignedInWarning />
-
             <ModuleHeaders moduleLinks={moduleLinks} />
 
             <TableOfContentsBlock tableOfContents={tableOfContents} />
@@ -174,7 +173,7 @@ export default function MarkdownLayout({
 
             {markdownData instanceof ModuleInfo && (
               <div className="mt-6 mb-2">
-                <LinksToEdit className="group inline-flex items-center rounded-md border border-gray-200 bg-white px-3 py-2 text-sm font-medium text-gray-700 shadow-sm transition hover:bg-gray-50 hover:text-gray-900 dark:border-gray-700 dark:bg-gray-800 dark:text-gray-200 dark:hover:bg-gray-700" />
+                <LinksToEdit className="group inline-flex items-center rounded-md border border-gray-200 bg-white px-3 py-2 text-sm font-medium text-gray-700 transition hover:bg-gray-50 hover:text-gray-900 dark:border-gray-700 dark:bg-gray-800 dark:text-gray-200 dark:hover:bg-gray-700" />
               </div>
             )}
 

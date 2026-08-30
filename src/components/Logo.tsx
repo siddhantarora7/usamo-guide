@@ -10,7 +10,13 @@ export default function Logo(): JSX.Element {
         src={logoSrc}
         alt="USAMO Guide"
       />
-      <span className="text-xl font-bold tracking-tight text-black dark:text-gray-300">
+      {/* Colour comes from --logo-ink so the wordmark can sit on the page
+          ground or inside the light nav pill without a Tailwind dark: variant
+          overriding it from the utilities layer. */}
+      <span
+        className="text-xl font-bold tracking-tight"
+        style={{ color: 'var(--logo-ink, var(--text-primary))' }}
+      >
         USAMO Guide
       </span>
     </div>

@@ -116,23 +116,26 @@ export default function TopNavigationBar({
         )}
       >
         <div className="mx-auto max-w-7xl px-2 sm:px-4 lg:px-8">
-          <div className="flex h-16 justify-between">
+          <div className="grid h-16 grid-cols-[1fr_auto_1fr] items-center gap-4">
             <div className="flex px-2 lg:px-0">
               <Link
                 to={linkLogoToIndex ? '/' : '/dashboard'}
                 state={{ redirect: redirectToDashboard }}
                 className={classNames(
-                  'flex shrink-0 items-center',
+                  'nav-logo-pill flex shrink-0 items-center',
                   animateEntrance && 'nav-item-enter'
                 )}
               >
-                <div className="h-8 sm:h-9">
+                <div className="h-7 sm:h-8">
                   <Logo />
                 </div>
               </Link>
+            </div>
+
+            <div className="hidden justify-center lg:flex">
               <div
                 className={classNames(
-                  'hidden space-x-8 lg:ml-8 lg:flex',
+                  'nav-capsule',
                   animateEntrance && 'nav-enter'
                 )}
                 style={
@@ -145,9 +148,8 @@ export default function TopNavigationBar({
                 <Link
                   to="/problems/"
                   getProps={({ isCurrent }) => ({
-                    className: isCurrent
-                      ? 'inline-flex items-center px-1 pt-0.5 border-b-2 border-blue-500 dark:border-blue-700 text-base font-medium leading-6 text-gray-900 dark:text-dark-high-emphasis focus:outline-hidden focus:border-blue-700 dark:focus:border-blue-500 transition'
-                      : 'inline-flex items-center px-1 pt-0.5 border-b-2 border-transparent text-base font-medium leading-6 text-gray-500 hover:text-gray-900 hover:border-gray-300  focus:outline-hidden focus:text-gray-900 focus:border-gray-300 dark:text-dark-high-emphasis dark:hover:border-gray-500 dark:focus:border-gray-500 transition',
+                    className: 'nav-capsule-link',
+                    'aria-current': isCurrent ? 'page' : undefined,
                   })}
                 >
                   Problems
@@ -156,23 +158,17 @@ export default function TopNavigationBar({
                   href={contestsUrl}
                   target="_blank"
                   rel="noreferrer"
-                  className="dark:text-dark-high-emphasis inline-flex items-center border-b-2 border-transparent px-1 text-base leading-6 font-medium text-gray-500 transition hover:border-gray-300 hover:text-gray-900 focus:border-gray-300 focus:text-gray-900 focus:outline-hidden dark:hover:border-gray-500 dark:focus:border-gray-500"
+                  className="nav-capsule-link"
                 >
                   Contests
                 </a>
                 <Popover className="h-full">
                   <PopoverButton
-                    className={classNames(
-                      'text-gray-500 hover:border-gray-300 focus:border-gray-300 dark:hover:border-gray-500 dark:focus:border-gray-500',
-                      'group dark:text-dark-high-emphasis inline-flex h-full items-center space-x-2 border-b-2 border-transparent pt-0.5 text-base leading-6 font-medium transition duration-150 ease-in-out hover:text-gray-900 focus:text-gray-900 focus:outline-hidden'
-                    )}
+                    className="nav-capsule-link group inline-flex items-center gap-1"
                   >
                     <span>Resources</span>
                     <ChevronDownIcon
-                      className={classNames(
-                        'text-gray-400',
-                        'dark:text-dark-med-emphasis dark:group-hover:text-dark-med-emphasis dark:group-focus:text-dark-med-emphasis h-5 w-5 transition duration-150 ease-in-out group-hover:text-gray-500 group-focus:text-gray-500'
-                      )}
+                      className="h-4 w-4 opacity-70"
                       aria-hidden="true"
                     />
                   </PopoverButton>
@@ -180,8 +176,8 @@ export default function TopNavigationBar({
                     transition
                     className="absolute left-1/2 z-[120] -mt-2 hidden w-screen max-w-md -translate-x-1/2 transform px-2 transition data-[closed]:translate-y-1 data-[closed]:opacity-0 data-[enter]:duration-200 data-[enter]:ease-out data-[leave]:duration-150 data-[leave]:ease-in sm:px-0 md:block lg:max-w-3xl"
                   >
-                    <div className="overflow-hidden rounded-lg ring-1 ring-black/5">
-                      <div className="relative grid gap-6 bg-white px-5 py-6 sm:gap-8 sm:p-8 lg:grid-cols-2 dark:bg-[#0D0D0D]">
+                    <div className="overflow-hidden rounded-xl border border-[var(--border)]">
+                      <div className="relative grid gap-6 bg-[var(--bg-surface)] px-5 py-6 sm:gap-8 sm:p-8 lg:grid-cols-2">
                         {resources.map(item => {
                           const isInternal = item.href.startsWith('/');
 
@@ -211,7 +207,7 @@ export default function TopNavigationBar({
                                     </span>
                                   )}
                                 </div>
-                                <p className="dark:text-dark-med-emphasis mt-1 text-sm text-gray-500">
+                                <p className="mt-1 text-sm text-[var(--text-muted)]">
                                   {item.description}
                                 </p>
                               </div>
@@ -248,23 +244,20 @@ export default function TopNavigationBar({
                 </Popover>
                 <Link
                   to="/about"
-                  className="dark:text-dark-high-emphasis inline-flex items-center border-b-2 border-transparent px-1 text-base leading-6 font-medium text-gray-500 transition hover:border-gray-300 hover:text-gray-900 focus:border-gray-300 focus:text-gray-900 focus:outline-hidden dark:hover:border-gray-500 dark:focus:border-gray-500"
+                  className="nav-capsule-link"
                 >
                   About
                 </Link>
                 <Link
                   to="/contact-us"
-                  className="dark:text-dark-high-emphasis inline-flex items-center border-b-2 border-transparent px-1 text-base leading-6 font-medium text-gray-500 transition hover:border-gray-300 hover:text-gray-900 focus:border-gray-300 focus:text-gray-900 focus:outline-hidden dark:hover:border-gray-500 dark:focus:border-gray-500"
+                  className="nav-capsule-link"
                 >
                   Contact Us
                 </Link>
               </div>
             </div>
-            <div
-              className={`flex flex-1 items-center justify-end px-2 lg:ml-6 lg:px-0`}
-            >
-              {/* search removed */}
-            </div>
+
+            <div className="flex items-center justify-end gap-1">
             <div className="flex items-center lg:hidden">
               {/* Mobile menu button */}
               <button
@@ -305,7 +298,6 @@ export default function TopNavigationBar({
                 </svg>
               </button>
             </div>
-            <div className="hidden h-6 self-center border-l border-gray-200 lg:mx-3 lg:block dark:border-gray-700" />
             <div
               className={classNames(
                 'hidden lg:flex lg:items-center',
@@ -330,15 +322,15 @@ export default function TopNavigationBar({
                 <>
                   <button
                     onClick={() => signIn()}
-                    className="dark:text-dark-high-emphasis relative inline-flex items-center rounded-md border border-transparent px-2 py-1 text-base leading-6 font-medium text-gray-500 hover:text-gray-700 focus:ring-2 focus:ring-blue-500 focus:outline-hidden"
+                    className="btn btn-sm btn-primary"
                   >
-                    Login
+                    Log in
                   </button>
 
                   {/* Settings button */}
                   <Link
                     to="/settings"
-                    className="dark:text-dark-med-emphasis dark:hover:text-dark-high-emphasis rounded-full border-2 border-transparent p-1 text-gray-400 transition hover:text-gray-300 focus:bg-gray-100 focus:text-gray-500 focus:outline-hidden dark:focus:bg-gray-700"
+                    className="nav-capsule-link ml-1 inline-flex p-1.5"
                     aria-label="Settings"
                   >
                     <svg
@@ -364,6 +356,7 @@ export default function TopNavigationBar({
                   </Link>
                 </>
               )}
+            </div>
             </div>
           </div>
         </div>

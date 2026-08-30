@@ -53,11 +53,12 @@ export function ActivityHeatmap({
   const activeDateModulesCompleted =
     (activeDateKey && moduleActivities[activeDateKey]?.length) ?? 0;
   return (
-    <div className="mt-4">
+    <div>
       <div
-        className="px-4 py-5 transition sm:rounded-2xl sm:p-6"
+        className="rounded-xl border p-5"
         style={{
           background: 'var(--card-bg)',
+          borderColor: 'var(--card-border)',
         }}
       >
         <div className="grid gap-y-4 lg:grid-cols-3 lg:gap-x-6 lg:gap-y-0">
@@ -103,7 +104,7 @@ export function ActivityHeatmap({
           </div>
           <div className="col-span-1">
             {activeDate ? (
-              <div style={{ color: '#D2D4C8' }}>
+              <div className="text-sm leading-6" style={{ color: 'var(--text-secondary)' }}>
                 <b>{activeDate.toString().substring(0, 16)}</b> <br />
                 {activeDateCount === 0 ? (
                   <p>No activity</p>
@@ -120,9 +121,9 @@ export function ActivityHeatmap({
             ) : (
               <p
                 className="mt-3 text-sm"
-                style={{ color: 'rgba(244, 237, 234, 0.72)' }}
+                style={{ color: 'var(--text-muted)' }}
               >
-                Hover over a square to view more details!
+                Hover a square for that day's detail.
               </p>
             )}
           </div>
@@ -130,10 +131,9 @@ export function ActivityHeatmap({
 
         <p
           className="mt-3 text-sm"
-          style={{ color: 'rgba(244, 237, 234, 0.72)' }}
+          style={{ color: 'var(--text-muted)' }}
         >
-          Note that activity calculations are very much in development and will
-          change in the near future.
+          Activity calculations are still in development and will change.
         </p>
       </div>
     </div>

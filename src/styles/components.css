@@ -1272,10 +1272,10 @@
   );
 }
 
-/* ── Extruded wordmark ─────────────────────────────────────────────────────
-   `perspective` on the stage and `preserve-3d` on the block are what make the
-   layer stack a real solid: without both, the copies flatten and the effect
-   collapses into a plain offset shadow.
+/* ── Wordmark ──────────────────────────────────────────────────────
+   Flat. The stack of offset copies that used to sit behind the face, and the
+   soft cast shadow under it, are both gone — the type carries the hero on its
+   own weight now, with nothing reading as moulded edge or lift.
 */
 .wordmark {
   width: 100%;
@@ -1284,11 +1284,6 @@
 .wordmark__block {
   position: relative;
   display: inline-block;
-  /* Straight. The depth comes from the layer stack sitting below and behind
-     the face, not from turning the block — a rotated wordmark reads as skewed
-     rather than as dimensional, and the stacked copies became visible as
-     tiles. */
-  transform: none;
   font-size: clamp(3.25rem, 12.5vw, 9.5rem);
   font-weight: 800;
   line-height: 0.88;
@@ -1296,45 +1291,10 @@
   white-space: nowrap;
 }
 
-.wordmark__layer,
-.wordmark__face {
-  display: block;
-}
-
-/* The backdrop. Each copy steps down and back by a sub-pixel-ish amount, so
-   the stack fuses into one soft solid edge instead of resolving into the
-   individual tiles that a larger step makes visible. */
-.wordmark__layer {
-  position: absolute;
-  inset: 0;
-  transform: translate(
-    calc(var(--layer) * 0.9px),
-    calc(var(--layer) * 1.15px)
-  );
-  color: color-mix(
-    in srgb,
-    var(--text-primary) calc(var(--layer-shade) * 16%),
-    var(--bg-page)
-  );
-  user-select: none;
-}
-
 .wordmark__face {
   position: relative;
-  /* Soft ambient contact shadow under the type: the "bit of 3D" without any
-     geometry of its own. */
-  text-shadow: 0 10px 40px rgba(0, 0, 0, 0.35);
+  display: block;
 }
-
-/* No clipped gloss overlay here.
-
-   A `background-clip: text` layer sitting over the face darkened the
-   letterforms toward their baseline — verified by isolation, and it survived
-   both removing every dark stop from the gradient and forcing the layer to
-   `mix-blend-mode: plus-lighter`. Bright, legible type is the requirement;
-   a shimmer that dims the wordmark is not worth keeping to get it.
-
-   The depth now comes entirely from the offset copies behind the face. */
 
 .wordmark__lead {
   color: var(--text-primary);
@@ -1347,14 +1307,6 @@
 
 .wordmark__trail {
   color: var(--headline-dim);
-}
-
-@media (prefers-reduced-motion: reduce) {
-  /* Keeps the resting tilt — the extrusion is structure, not motion — but
-     stops it tracking the cursor. */
-  .wordmark__block {
-    transition: none;
-  }
 }
 
 /* ── Gloss panel section ─────────────────────────────────────────────────── */
@@ -1742,6 +1694,17 @@
    button's ink rather than the page's. */
 .nav-logo-pill {
   --logo-ink: var(--btn-ink);
+}
+
+/* The mark is a three-blade trefoil, and one of those blades is pale rose —
+   near-invisible against the pill's light face, which left the logo reading as
+   two blades and a gap. A tight dark drop-shadow traces the alpha edge, so the
+   third blade gets a contour without tinting any of them. Scoped to the light
+   pill: on the page ground all three blades already have contrast. */
+.nav-logo-pill .logo-mark {
+  filter:
+    drop-shadow(0 0 0.5px rgba(30, 22, 28, 0.85))
+    drop-shadow(0 0 1.5px rgba(30, 22, 28, 0.5));
 }
 
 /* Give the links capsule the same moulded treatment as the buttons, so the
@@ -2538,7 +2501,12 @@
 .wordmark__pet {
   position: absolute;
   right: 0.02em;
-  bottom: 0.58em;
+  /* Rests on the top of the final "e" rather than sinking into it. The "e" of
+     Geist tops out 0.55em above the baseline, which is 0.845em up from the
+     bottom of the inline box this is anchored to; a hair under that lands the
+     mascot's feet on the letter instead of leaving it hovering. It was 0.58em,
+     which buried it to the waist. */
+  bottom: 0.8em;
   width: 0.46em;
   height: auto;
   pointer-events: none;
@@ -2568,6 +2536,36 @@
    out. No iframe: every card can render at once, and the section costs
    nothing at runtime.
 */
+/* The live module page on the centre card. It sits over .cf__page and fades in
+   on load, so the card never goes blank while the frame fetches — the
+   frontmatter face is the ground underneath it the whole time. */
+.cf__live {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  opacity: 0;
+  transition: opacity 320ms cubic-bezier(0.22, 1, 0.36, 1);
+  pointer-events: none;
+}
+
+.cf__live.is-ready {
+  opacity: 1;
+}
+
+.cf__live-frame {
+  display: block;
+  border: 0;
+  /* Scaled from the top-left by the factor the component measures, so the
+     desktop-width render fills the card face exactly. */
+  transform-origin: 0 0;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .cf__live {
+    transition: none;
+  }
+}
+
 .cf__page {
   position: absolute;
   inset: 0;

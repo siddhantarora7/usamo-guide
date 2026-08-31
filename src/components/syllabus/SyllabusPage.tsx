@@ -262,21 +262,21 @@ export default function SyllabusPage({
           </div>
 
           <div ref={spineRef}
-            className="relative mx-auto max-w-(--breakpoint-xl) space-y-6 px-4 py-12">
+            className="syllabus-track mx-auto max-w-(--breakpoint-xl) space-y-6 px-4 py-12">
             {section.map(category => (
               <div
                 key={category.name}
                 className="group/category flex flex-col rounded-2xl bg-[var(--card-bg)] p-4 transition md:flex-row"
               >
-                <div className="flex flex-1 flex-col items-start pr-0 text-left md:sticky md:top-24 md:self-start md:pr-12">
-                  <h2 className="py-3 text-2xl leading-tight font-bold tracking-tight text-[var(--text-primary)] transition group-hover/category:text-[var(--accent)] md:text-3xl">
+                <div className="flex flex-1 flex-col items-center justify-center pr-0 text-center md:pr-12">
+                  <h2 className="py-3 text-3xl leading-tight font-bold tracking-tight text-[var(--text-primary)] transition group-hover/category:text-[var(--accent)] md:text-4xl">
                     {category.name}
                   </h2>
                   <div className="py-2 leading-6 text-[var(--text-secondary)] transition group-hover/category:text-[var(--text-primary)]">
                     {/* eslint-disable-next-line react-hooks/rules-of-hooks */}
                     {useProgressBarForCategory(category)}
                   </div>
-                  <p className="max-w-sm text-sm text-[var(--text-secondary)] transition group-hover/category:text-[var(--text-primary)]">
+                  <p className="max-w-sm text-base leading-7 text-[var(--text-secondary)] transition group-hover/category:text-[var(--text-primary)] md:text-lg">
                     {category.description}
                   </p>
                 </div>

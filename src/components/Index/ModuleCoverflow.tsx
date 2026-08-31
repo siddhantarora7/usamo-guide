@@ -14,13 +14,29 @@ import * as React from 'react';
  * description, difficulty, prerequisite count — laid out the way the module
  * page lays them out.
  *
- * They were live iframes. That could never show more than one or two cards at
- * once: each framed module pulls React, KaTeX and its own stylesheet, and
- * loading seven locked the main thread hard enough to stop the tab responding,
- * three separate times, staggering included. Reading the same data out of
- * GraphQL at build time gives every card real content, all of them visible at
- * once, for no runtime cost at all.
+ * The centre card also carries a live frame of the real module page, mounted
+ * over that face once it loads.
+ *
+ * Exactly one frame exists at a time. Every card being a live iframe is what
+ * made this section unusable before: each framed module pulls React, KaTeX and
+ * its own stylesheet, and loading seven locked the main thread hard enough to
+ * stop the tab responding. The neighbours are raked ~44 degrees away and faded,
+ * so a live page there buys nothing anyway — the frontmatter face reads better
+ * at that angle, and stays as the ground under the centre frame while it loads.
+ *
+ * Mounting is deferred until the carousel settles, so dragging or holding an
+ * arrow key across the deck does not spawn and tear down a frame per card.
  */
+
+/** Width the framed module renders at before scaling, so it always shows
+    desktop rather than the card's own narrow layout. */
+const FRAME_WIDTH = 1380;
+
+/** Cards are 1.3x their width; the frame matches so it fills the face. */
+const FRAME_RATIO = 1.3;
+
+/** How long the selection must hold still before a frame is mounted. */
+const SETTLE_MS = 260;
 
 export type CoverflowModule = {
   path: string;
@@ -118,6 +134,31 @@ export default function ModuleCoverflow({
   } | null>(null);
 
   const [selected, setSelected] = React.useState(0);
+
+  /* The live frame on the centre card. `settled` lags `selected` so flicking
+     through the deck does not mount a frame per card on the way past, and
+     `ready` gates the fade so the frontmatter face shows until the page has
+     actually painted. */
+  const [settled, setSettled] = React.useState<number | null>(null);
+  const [ready, setReady] = React.useState(false);
+  const [scale, setScale] = React.useState(0);
+
+  React.useEffect(() => {
+    setReady(false);
+    const id = window.setTimeout(() => setSettled(selected), SETTLE_MS);
+    return () => window.clearTimeout(id);
+  }, [selected]);
+
+  // Cards are all one width, so measuring any mounted card sizes the frame.
+  React.useEffect(() => {
+    const card = cardRefs.current.find(Boolean);
+    if (!card) return;
+    const apply = () => setScale(card.clientWidth / FRAME_WIDTH);
+    const ro = new ResizeObserver(apply);
+    ro.observe(card);
+    apply();
+    return () => ro.disconnect();
+  }, []);
 
   const indexAt = React.useCallback(
     (pos: number) => ((Math.round(pos) % count) + count) % count,
@@ -350,6 +391,31 @@ export default function ModuleCoverflow({
                       </div>
                     </dl>
                   </article>
+
+                  {/* The real page, over the face, on the centre card only.
+                      Inert: no keyboard focus, no pointer events, and out of
+                      the accessibility tree — the caption below the deck
+                      carries the name and the link. */}
+                  {index === settled && scale > 0 && (
+                    <div
+                      className={classNames('cf__live', ready && 'is-ready')}
+                      aria-hidden="true"
+                    >
+                      <iframe
+                        src={mod.path}
+                        title=""
+                        className="cf__live-frame"
+                        width={FRAME_WIDTH}
+                        height={Math.round(FRAME_WIDTH * FRAME_RATIO)}
+                        style={{ transform: `scale(${scale})` }}
+                        loading="lazy"
+                        scrolling="no"
+                        tabIndex={-1}
+                        aria-hidden="true"
+                        onLoad={() => setReady(true)}
+                      />
+                    </div>
+                  )}
                 </div>
               );
             })}

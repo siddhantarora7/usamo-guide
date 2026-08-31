@@ -6,7 +6,7 @@ export default function Logo(): JSX.Element {
   return (
     <div className="flex flex-nowrap items-center space-x-2 whitespace-nowrap">
       <img
-        className="h-9 w-9 shrink-0"
+        className="logo-mark h-9 w-9 shrink-0"
         src={logoSrc}
         alt="USAMO Guide"
       />

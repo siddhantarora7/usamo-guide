@@ -45,19 +45,22 @@
 .link-with-progress-container--syllabus {
   /* The module column carries `pl-7 md:pl-12`, so the spine sits in that
      gutter: half a rem in from the column edge on mobile, three rem on
-     desktop. One variable moves both the line and the marker together. */
+     desktop. One variable moves both the line and the marker together.
+
+     On desktop the offset is read straight off --syllabus-gutter, the same
+     number syllabus.css uses to place the dashed rule, so the dots always land
+     on the dashes rather than beside them. */
   --spine-x: -0.875rem;
   --marker-size: 18px;
 
   @media (min-width: 768px) {
-    --spine-x: -1.5rem;
+    --spine-x: calc(-1 * var(--syllabus-gutter, 1.5rem));
   }
 
   &::after {
     top: calc(1.5rem - var(--marker-size) / 2);
-  }
-
-  &::after {
+    /* Rimmed in the page ground so the marker punches a hole in the line it
+       sits on, rather than smudging into it. */
     border: 2px solid var(--bg-page);
   }
 
@@ -79,12 +82,34 @@
 
 }
 
-/* Not-started and ignored modules get a smaller marker. It only overrides the
-   size — the position still derives from --spine-x, so it stays centred on the
-   line. Setting `left` here independently is what put the two out of register
-   in the first place, and it applied to most rows on the page. */
+/* Not-started and ignored modules get a hollow marker: a ring on the line
+   rather than a bead on it. Previously these differed only by being 5px
+   smaller, which is not a difference you can read without a filled dot next to
+   it for comparison — and on a syllabus where almost every row is Not Started,
+   there usually isn't one. Hollow vs. filled states it outright.
+
+   Only the fill and the size are overridden; the position still derives from
+   --spine-x, so it stays centred on the line. Setting `left` here
+   independently is what put the two out of register in the first place. */
 .link-with-progress-container--syllabus--small {
-  --marker-size: 13px;
+  --marker-size: 14px;
+
+  &::after {
+    /* Filled with the card ground, not transparent: the solid segment runs
+       behind the marker, and a see-through centre let it show as a bright bar
+       down the middle — a bullseye rather than a ring. */
+    background-color: var(--card-bg);
+    box-shadow: inset 0 0 0 2px var(--dot-and-line-color);
+  }
+
+  /* Ignition brightens the ring, so a lit row still reads as "reached" while
+     staying hollow — filled stays reserved for started modules. */
+  &.is-lit::after {
+    background-color: var(--card-bg);
+    box-shadow:
+      inset 0 0 0 2px var(--text-primary),
+      0 0 0 5px var(--accent-soft);
+  }
 }
 
 /* Progress states, in the same ink vocabulary the dashboard readouts use:

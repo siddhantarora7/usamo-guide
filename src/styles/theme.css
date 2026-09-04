@@ -19,10 +19,12 @@
   :root {
     /* One place each stack is defined, so a font swap is a one-line change
        rather than a search across every component. */
-    --font-sans: 'Geist Variable', 'Geist', ui-sans-serif, system-ui,
-      -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
-    --font-mono: 'Geist Mono Variable', 'Geist Mono', ui-monospace,
-      SFMono-Regular, Menlo, monospace;
+    --font-sans:
+      'Geist Variable', 'Geist', ui-sans-serif, system-ui, -apple-system,
+      'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+    --font-mono:
+      'Geist Mono Variable', 'Geist Mono', ui-monospace, SFMono-Regular, Menlo,
+      monospace;
 
     /* ── LIGHT MODE ─────────────────────────────────────────────────────── */
     /* Four tonal floors. Light mode inverts the stack: the page is the
@@ -120,31 +122,63 @@
        the lit edge of a moulded object, the face is the surface it wraps. */
     --btn-rim: linear-gradient(180deg, #ffffff 0%, #cfcbc4 100%);
     --btn-face: linear-gradient(180deg, #ffffff 0%, #f2efe9 46%, #ded9d1 100%);
-    --btn-face-hover: linear-gradient(180deg, #ffffff 0%, #f8f6f2 46%, #e8e3db 100%);
+    --btn-face-hover: linear-gradient(
+      180deg,
+      #ffffff 0%,
+      #f8f6f2 46%,
+      #e8e3db 100%
+    );
     --btn-ink: #191817;
-    --btn-drop: 0 1px 1px rgba(25, 24, 23, 0.16), 0 6px 16px -6px rgba(25, 24, 23, 0.3);
-    --btn-drop-hover: 0 1px 2px rgba(25, 24, 23, 0.2), 0 10px 26px -8px rgba(25, 24, 23, 0.36);
-    --btn-inset: inset 0 1px 0 rgba(255, 255, 255, 0.95);
+    --btn-drop:
+      0 1px 1px rgba(25, 24, 23, 0.16), 0 6px 16px -6px rgba(25, 24, 23, 0.3);
+    --btn-drop-hover:
+      0 1px 2px rgba(25, 24, 23, 0.2), 0 10px 26px -8px rgba(25, 24, 23, 0.36);
+    --btn-inset:
+      inset 0 1px 0 rgba(255, 255, 255, 0.95),
+      inset 0 -1px 0 rgba(25, 24, 23, 0.13),
+      inset 0 -6px 10px -8px rgba(25, 24, 23, 0.22);
 
     --btn-dark-rim: linear-gradient(180deg, #4a4740 0%, #171614 100%);
-    --btn-dark-face: linear-gradient(180deg, #2c2a27 0%, #201e1c 50%, #171614 100%);
-    --btn-dark-face-hover: linear-gradient(180deg, #37342f 0%, #26241f 50%, #1d1b19 100%);
+    --btn-dark-face: linear-gradient(
+      180deg,
+      #2c2a27 0%,
+      #201e1c 50%,
+      #171614 100%
+    );
+    --btn-dark-face-hover: linear-gradient(
+      180deg,
+      #37342f 0%,
+      #26241f 50%,
+      #1d1b19 100%
+    );
     --btn-dark-ink: #f2efe9;
     --btn-dark-inset: inset 0 1px 0 rgba(255, 253, 248, 0.1);
 
     --btn-primary-bg: #191817;
-    --btn-primary-glow: 0 0 0 1px rgba(25, 24, 23, 0.06), 0 6px 20px -6px rgba(25, 24, 23, 0.28);
-    --btn-primary-glow-hover: 0 0 0 1px rgba(25, 24, 23, 0.08), 0 8px 26px -6px rgba(25, 24, 23, 0.36);
+    --btn-primary-glow:
+      0 0 0 1px rgba(25, 24, 23, 0.06), 0 6px 20px -6px rgba(25, 24, 23, 0.28);
+    --btn-primary-glow-hover:
+      0 0 0 1px rgba(25, 24, 23, 0.08), 0 8px 26px -6px rgba(25, 24, 23, 0.36);
     --btn-secondary-bg: transparent;
 
     /* Glossy panels. Two surfaces — one bright, one deep — each with a soft
        top-edge sheen, per the Cluely reference. */
-    --gloss-light-bg: linear-gradient(168deg, #fffefb 0%, #f6f3ee 58%, #eae5dd 100%);
+    --gloss-light-bg: linear-gradient(
+      168deg,
+      #fffefb 0%,
+      #f6f3ee 58%,
+      #eae5dd 100%
+    );
     --gloss-light-ink: #191817;
     --gloss-light-ink-muted: #5c5850;
     --gloss-light-border: rgba(25, 24, 23, 0.1);
     --gloss-light-inner: #fffefb;
-    --gloss-dark-bg: linear-gradient(168deg, #232120 0%, #171514 58%, #100f0e 100%);
+    --gloss-dark-bg: linear-gradient(
+      168deg,
+      #232120 0%,
+      #171514 58%,
+      #100f0e 100%
+    );
     --gloss-dark-ink: #f4f1ec;
     --gloss-dark-ink-muted: #a7a29a;
     --gloss-dark-border: rgba(25, 24, 23, 0.14);
@@ -250,29 +284,63 @@
 
     --btn-rim: linear-gradient(180deg, #ffffff 0%, #a8a49c 100%);
     --btn-face: linear-gradient(180deg, #fdfcfa 0%, #eeebe4 44%, #cfcbc3 100%);
-    --btn-face-hover: linear-gradient(180deg, #ffffff 0%, #f7f5f0 44%, #ddd9d1 100%);
+    --btn-face-hover: linear-gradient(
+      180deg,
+      #ffffff 0%,
+      #f7f5f0 44%,
+      #ddd9d1 100%
+    );
     --btn-ink: #171614;
-    --btn-drop: 0 1px 2px rgba(0, 0, 0, 0.55), 0 8px 22px -8px rgba(0, 0, 0, 0.8);
-    --btn-drop-hover: 0 2px 4px rgba(0, 0, 0, 0.6), 0 14px 34px -10px rgba(0, 0, 0, 0.85);
-    --btn-inset: inset 0 1px 0 rgba(255, 255, 255, 0.9);
+    --btn-drop:
+      0 1px 2px rgba(0, 0, 0, 0.55), 0 8px 22px -8px rgba(0, 0, 0, 0.8);
+    --btn-drop-hover:
+      0 2px 4px rgba(0, 0, 0, 0.6), 0 14px 34px -10px rgba(0, 0, 0, 0.85);
+    --btn-inset:
+      inset 0 1px 0 rgba(255, 255, 255, 0.9),
+      inset 0 -1px 0 rgba(23, 22, 20, 0.16),
+      inset 0 -6px 10px -8px rgba(23, 22, 20, 0.26);
 
     --btn-dark-rim: linear-gradient(180deg, #56524a 0%, #0e0d0c 100%);
-    --btn-dark-face: linear-gradient(180deg, #262421 0%, #1a1917 50%, #121110 100%);
-    --btn-dark-face-hover: linear-gradient(180deg, #322f2a 0%, #23211e 50%, #191816 100%);
+    --btn-dark-face: linear-gradient(
+      180deg,
+      #262421 0%,
+      #1a1917 50%,
+      #121110 100%
+    );
+    --btn-dark-face-hover: linear-gradient(
+      180deg,
+      #322f2a 0%,
+      #23211e 50%,
+      #191816 100%
+    );
     --btn-dark-ink: #edeae5;
     --btn-dark-inset: inset 0 1px 0 rgba(255, 253, 248, 0.09);
 
     --btn-primary-bg: #f4f1ec;
-    --btn-primary-glow: 0 0 0 1px rgba(237, 234, 229, 0.12), 0 6px 24px -6px rgba(237, 234, 229, 0.24);
-    --btn-primary-glow-hover: 0 0 0 1px rgba(237, 234, 229, 0.2), 0 8px 30px -6px rgba(237, 234, 229, 0.34);
+    --btn-primary-glow:
+      0 0 0 1px rgba(237, 234, 229, 0.12),
+      0 6px 24px -6px rgba(237, 234, 229, 0.24);
+    --btn-primary-glow-hover:
+      0 0 0 1px rgba(237, 234, 229, 0.2),
+      0 8px 30px -6px rgba(237, 234, 229, 0.34);
     --btn-secondary-bg: #1b1917;
 
-    --gloss-light-bg: linear-gradient(168deg, #fbf9f5 0%, #efece5 60%, #e2ded5 100%);
+    --gloss-light-bg: linear-gradient(
+      168deg,
+      #fbf9f5 0%,
+      #efece5 60%,
+      #e2ded5 100%
+    );
     --gloss-light-ink: #171615;
     --gloss-light-ink-muted: #5c5850;
     --gloss-light-border: rgba(237, 234, 229, 0.14);
     --gloss-light-inner: #fffefb;
-    --gloss-dark-bg: linear-gradient(168deg, #1f1d1b 0%, #151312 58%, #0e0d0c 100%);
+    --gloss-dark-bg: linear-gradient(
+      168deg,
+      #1f1d1b 0%,
+      #151312 58%,
+      #0e0d0c 100%
+    );
     --gloss-dark-ink: #f4f1ec;
     --gloss-dark-ink-muted: #a7a29a;
     --gloss-dark-border: rgba(237, 234, 229, 0.12);
@@ -283,7 +351,6 @@
     --hero-grid: rgba(237, 234, 229, 0.045);
     --hero-wave: rgba(237, 234, 229, 0.3);
     --headline-dim: #7c776f;
-
 
     --modal-bg: #131211;
     --modal-btn-bg: #edeae5;
